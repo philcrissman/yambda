@@ -31,4 +31,9 @@ class TokenizerTest < Minitest::Test
   def test_tokenizing_a_quoted_list
     assert_equal ["quote", "(", "1", "2", "3", ")"], @tokenizer.tokenize("'(1 2 3)")
   end
+
+  def test_tokenizing_a_lambda_expression
+    # simplest possible function, identity!
+    assert_equal ["(", "lambda", "(", "x", ")", "x", ")"], @tokenizer.tokenize( "(lambda (x) x)")
+  end
 end

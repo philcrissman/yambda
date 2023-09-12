@@ -30,6 +30,7 @@ module Yambda
       case token
       when '('
         list = []
+        # hey, look at us looking at the next token. Are we a look-ahead parser now?
         quoted_exp = (tokens[0] == 'quote')
         until tokens[0] == ')'
           list << read_from_tokens(tokens)

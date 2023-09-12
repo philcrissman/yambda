@@ -5,6 +5,7 @@ require_relative 'yambda/environment'
 require_relative 'yambda/evaluator'
 require_relative 'yambda/cons'
 require_relative 'yambda/runtime'
+require_relative 'yambda/lambda'
 
 require_relative "yambda/version"
 

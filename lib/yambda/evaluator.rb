@@ -15,10 +15,18 @@ module Yambda
           _, var, exp = list_to_array(x)
           env[var] = eval(::Yambda::Parser.convert_to_cons(exp), env)
         when :quote
-          x.cdr.car
+          x.cdr.car.to_s
+        when :lambda
+          # make a lambda
+          l = ::Yambda::Lambda.new(env, x.cdr.car, x.cdr.cdr)
+          # return the lambda
+          l
+          # ... that's it?
         else
+          # binding.pry
           proc = eval(x.car, env)
           args = list_to_array(x.cdr).map{|arg| eval(arg, env)}
+          return proc unless proc.respond_to?(:call)
           proc.call(*args)
         end
       end

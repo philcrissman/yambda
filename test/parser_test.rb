@@ -55,4 +55,12 @@ class ParserTest < Minitest::Test
     assert_equal :quote, list.first.car
     assert_equal ::Yambda::Cons, list.first.cdr.car.class
   end
+
+  def test_parsing_a_simple_lambda_expression
+    list = @parser.parse("(lambda (x) x)")
+    assert_equal :lambda, list.first.car
+    assert_equal ::Yambda::Cons, list.first.cdr.car.class # the first thing after the lambda should be the list of args
+    assert_equal :x, list.first.cdr.car.car
+    assert_equal :x, list.first.cdr.cdr.car # x is the whole body of this expression; expect to see that here.
+  end
 end
