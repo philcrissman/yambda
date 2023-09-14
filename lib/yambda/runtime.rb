@@ -7,7 +7,13 @@ module Yambda
         :+ => ->(x, y){ x + y },
         :- => ->(x, y){ x - y },
         :* => ->(x, y){ x * y },
-        :/ => ->(x , y){ x / y },
+        :/ => ->(x, y){ x / y },
+        :% => ->(x, y){ x % y },
+        :eq => ->(x, y){ x == y },
+        :< => ->(x, y){ x < y },
+        :> => ->(x, y){ x > y},
+        :<= => ->(x, y){ x <= y },
+        :>= => ->(x, y){ x >= y },
         :car => ->(x){ x.car },
         :cdr => ->(x){ x.cdr },
         :cons => ->(x, y){ ::Yambda::Cons.new(x, y) },
@@ -19,9 +25,13 @@ module Yambda
     end
 
     def run(text)
-      expressions = @parser.parse(text)
+      begin
+        expressions = @parser.parse(text)
 
-      @evaluator.eval_all(expressions)
+        @evaluator.eval_all(expressions).to_s
+      rescue Exception => e
+        puts e.message
+      end
     end
 
     def repl

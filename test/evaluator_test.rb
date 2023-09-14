@@ -6,11 +6,16 @@ class EvaluatorTest < Minitest::Test
   def setup
     @parser = ::Yambda::Parser.new
     env = ::Yambda::Environment.new
-    env.update({:foo => 42, :+ => ->(x, y){ x + y }, :* => ->(x, y){ x * y }})
+    env.update({:foo => 42, :+ => ->(x, y){ x + y },
+                :* => ->(x, y){ x * y },
+                :cons => ->(x, y){ ::Yambda::Cons.new(x, y) },
+                :eq => ->(x, y){ x == y }
+               })
     @evaluator = ::Yambda::Evaluator.new(env)
   end
 
   def test_evaluating_a_parsed_expression
+    # binding.pry
     exp = @parser.parse("(+ 2 3)")
     # parse returns a list of expressions; since we're testing eval, we'll just eval the first (& only) expression
     result = @evaluator.eval(exp.first)
@@ -51,5 +56,17 @@ class EvaluatorTest < Minitest::Test
     exps = @parser.parse("(define square (lambda (x) (* x x)))(square 4)")
     result = @evaluator.eval_all(exps)
     assert_equal 16, result
+  end
+
+  def test_eval_cons_atom_with_empty_list
+    exps = @parser.parse("(cons 1 '())")
+    result = @evaluator.eval_all(exps)
+    assert_equal "'(1)", result.to_s
+  end
+
+  def test_eval_if_expression
+    exps = @parser.parse("(if (eq 3 3) 'fizz 'buzz)")
+    result = @evaluator.eval_all(exps)
+    assert_equal "'fizz", result
   end
 end

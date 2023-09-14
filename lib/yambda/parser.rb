@@ -26,6 +26,7 @@ module Yambda
     def read_from_tokens(tokens)
       raise SyntaxError, "Unexpected EOF" if tokens.empty?
 
+      # binding.pry
       token = tokens.shift
       case token
       when '('

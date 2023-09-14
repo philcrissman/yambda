@@ -15,11 +15,14 @@ class ParserTest < Minitest::Test
     assert_equal 2, list.first.cdr.car
     assert_equal 3, list.first.cdr.cdr.car
   end
-  #
-  # def test_parsing_something_more_complex
-  #   assert_equal [[:+, [:*, 2, 2], [:/, 8, 2]]], @parser.parse("(+ (* 2 2) (/ 8 2))")
-  # end
-  #
+
+  def test_parsing_something_more_complex
+    list = @parser.parse("(+ (* 2 2) (/ 8 2))")
+    assert_equal :+, list.first.car
+    assert_equal :*, list.first.cdr.car.car
+    assert_equal :/, list.first.cdr.cdr.car.car
+  end
+
   # def test_parsing_multiple_expressions
   #   assert_equal [[:define, :foo, 42], [:+, :foo, 3]], @parser.parse("(define foo 42)(+ foo 3)")
   # end
@@ -62,5 +65,27 @@ class ParserTest < Minitest::Test
     assert_equal ::Yambda::Cons, list.first.cdr.car.class # the first thing after the lambda should be the list of args
     assert_equal :x, list.first.cdr.car.car
     assert_equal :x, list.first.cdr.cdr.car # x is the whole body of this expression; expect to see that here.
+  end
+
+  def test_parsing_car_of_cons
+    list = @parser.parse("(car (cons 1 2))")
+    assert_equal :car, list.first.car
+    assert_equal :cons, list.first.cdr.car.car
+  end
+
+  def test_parsing_cons_atom_with_empty_list
+    list = @parser.parse("(cons 1 '())")
+    assert_equal :cons, list.first.car
+    assert_equal 1, list.first.cdr.car
+    assert list.first.cdr.cdr.cdr.instance_of?(::Yambda::EmptyList)
+    assert_equal [:cons, 1, [:quote, nil]], list.first.to_a
+  end
+
+  def test_parsing_an_if_expression
+    list = @parser.parse("(if (> 3 n) true false)")
+    assert_equal :if, list.first.car
+    assert_equal [:>, 3, :n], list.first.cdr.car.to_a
+    assert_equal :true, list.first.cdr.cdr.car
+    assert_equal :false, list.first.cdr.cdr.cdr.car
   end
 end

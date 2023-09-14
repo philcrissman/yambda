@@ -2,6 +2,9 @@ module Yambda
   class Lambda
     def initialize(env, args, expression)
       @env = ::Yambda::Environment.new(env)
+      if args.is_a?(Array)
+        args = ::Yambda::Parser.convert_to_cons(args)
+      end
       @args = args
       @expression = expression
       @evaluator = ::Yambda::Evaluator.new(@env)
@@ -19,6 +22,10 @@ module Yambda
         raise StandardError, "Too many arguments!"
       end
       @evaluator.eval(@expression, @env)
+    end
+
+    def to_s
+      "#<procedure>"
     end
   end
 end

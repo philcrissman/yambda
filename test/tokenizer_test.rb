@@ -36,4 +36,16 @@ class TokenizerTest < Minitest::Test
     # simplest possible function, identity!
     assert_equal ["(", "lambda", "(", "x", ")", "x", ")"], @tokenizer.tokenize( "(lambda (x) x)")
   end
+
+  def test_tokenizing_a_function_call
+    assert_equal ["(", "car", "(", "cons", "1", "2", ")", ")"], @tokenizer.tokenize("(car (cons 1 2))")
+  end
+
+  def test_tokenize_cons_with_empty_list
+    assert_equal ["(", "cons", "1", "quote", "(", ")", ")"], @tokenizer.tokenize("(cons 1 '())")
+  end
+
+  def test_tokenize_if_expression
+    assert_equal ["(", "if", "(", ">", "3", "n", ")", "true", "false", ")"], @tokenizer.tokenize("(if (> 3 n) true false)")
+  end
 end
