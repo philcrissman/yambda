@@ -1,6 +1,5 @@
 module Yambda
   class EmptyList
-
     def list?
       true
     end
@@ -20,6 +19,7 @@ module Yambda
       []
     end
   end
+
   class Cons
     attr_reader :car, :cdr
 

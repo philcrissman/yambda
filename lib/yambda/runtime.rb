@@ -4,6 +4,7 @@ module Yambda
       @global_env = ::Yambda::Environment.new
 
       @global_env.update({
+        :version => ->(){ "You are enjoying yambda version #{::Yambda::VERSION}"},
         :+ => ->(x, y){ x + y },
         :- => ->(x, y){ x - y },
         :* => ->(x, y){ x * y },

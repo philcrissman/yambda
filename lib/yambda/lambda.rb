@@ -14,7 +14,10 @@ module Yambda
       arg = @args
       while !arg.nil?
         argval = args.shift
-        raise StandardError, "Wrong number of arguments" if argval.nil?
+        # binding.pry
+        unless argval.is_a?(::Yambda::EmptyList)
+          raise StandardError, "Wrong number of arguments" if argval.nil?
+        end
         @env.merge!({arg.car => argval})
         arg = arg.cdr
       end

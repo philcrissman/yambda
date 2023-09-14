@@ -9,7 +9,8 @@ class EvaluatorTest < Minitest::Test
     env.update({:foo => 42, :+ => ->(x, y){ x + y },
                 :* => ->(x, y){ x * y },
                 :cons => ->(x, y){ ::Yambda::Cons.new(x, y) },
-                :eq => ->(x, y){ x == y }
+                :eq => ->(x, y){ x == y },
+                :null? => ->(x){ x.nil? }
                })
     @evaluator = ::Yambda::Evaluator.new(env)
   end
@@ -67,6 +68,12 @@ class EvaluatorTest < Minitest::Test
   def test_eval_if_expression
     exps = @parser.parse("(if (eq 3 3) 'fizz 'buzz)")
     result = @evaluator.eval_all(exps)
-    assert_equal "'fizz", result
+    assert_equal "fizz", result
   end
+
+  # def test_eval_function_with_a_quoted_list_arg
+  #   exps = @parser.parse("(define double (lambda (lat) (if (null? lat) '() (cons (* 2 (car lat)) (double (cdr lat))))))(double '(1 2))")
+  #   result = @evaluator.eval_all(exps)
+  #   assert_equal "'(2 4)", result
+  # end
 end

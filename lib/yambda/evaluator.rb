@@ -37,6 +37,7 @@ module Yambda
           condval ? eval(thendo) : eval(elsedo)
         else
           # it's special cases all the way down, Bob!
+          # binding.pry
           if x.is_a?(Array)
             x = ::Yambda::Parser.convert_to_cons(x)
           end
